@@ -1,0 +1,96 @@
+.App {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  background-color: #282c34;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.transfer-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  background-color: #282c34;
+  color: white;
+}
+
+.wallet-container {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+}
+
+.title {
+  color: white;
+  font-weight: bold;
+  font-size: calc(10px + 3vmin);
+  margin-bottom: 30px;
+}
+
+.desc {
+  color: white;
+  font-weight: bold;
+  font-size: calc(10px + 2vmin);
+  margin-bottom: 20px;
+}
+
+.btn {
+  background-color: #2563eb;
+  margin-top: 40px;
+  width: 60%;
+  height: 40px;
+  border-width: 0;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.wallet-select {
+  width: 80%;
+  font-size: 20px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+.app-download-link {
+  color: #2563eb;
+}
+
+.qr-container {
+  width: 300px;
+  height: 300px;
+}
+
+input {
+  width: 80%;
+  height: 30px;
+  font-size: 15px;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

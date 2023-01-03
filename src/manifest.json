@@ -17,7 +17,8 @@
     "128": "icon-128.png"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "gcm"
   ],
   "content_scripts": [
     {
