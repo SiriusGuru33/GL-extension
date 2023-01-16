@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import QRCode from 'qrcode'
+import { Button } from 'semantic-ui-react'
 
-import gridlockIcon from '../../assets/img/icon-34.png';
 import './Home.css';
 
 import Header from "../../containers/Header/Header";
@@ -22,11 +21,17 @@ const Home = ({ userData, setScreenState }) => {
 
     return (
         <div className="App">
-            <Header username={userData.username} profilePhotoUri={userData.profilePhotoUri} />
+            <Header userdata={userData} profilePhotoUri={userData.profilePhotoUri} setScreenState={setScreenState} />
             <div className='body'>
-                <button className="btn" onClick={onAddWallet}>Add Wallet</button>
-                <button className="btn" onClick={onSend}>Send</button>
-                <button className="btn" onClick={onReceive}>Receive</button>
+                {/* <button className="btn" onClick={onAddWallet}>Add Wallet</button> */}
+                <div className="btn">
+                    <Button color='violet' onClick={onSend} size='big' fluid >Send</Button>
+                </div>
+                <div className="btn">
+                    <Button color='violet' onClick={onReceive} size='big' fluid >Receive</Button>
+                </div>
+                {/* <button className="btn" onClick={onSend}>Send</button>
+                <button className="btn" onClick={onReceive}>Receive</button> */}
             </div>
         </div>
     )

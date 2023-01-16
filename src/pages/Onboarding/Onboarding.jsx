@@ -4,13 +4,13 @@ import QRCode from 'qrcode'
 import gridlockIcon from '../../assets/img/icon-34.png';
 import './Onboarding.css';
 
-const Onboarding = ({ deviceID, firebaseRegId }) => {
+const Onboarding = ({ deviceId, firebaseRegId }) => {
     const [qrSrc, setQrSrc] = useState(null);
 
     const onPair = (e) => {
         const codeData = JSON.stringify({
             guardianType: 'extension',
-            deviceID: deviceID,
+            deviceId: deviceId,
             firebaseToken: firebaseRegId,
         })
         QRCode.toDataURL(codeData, {

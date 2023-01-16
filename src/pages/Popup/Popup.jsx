@@ -1,28 +1,31 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 import axios from 'axios';
+import 'semantic-ui-css/semantic.min.css'
 
-import { DEVICE_ID_KEY, FIREBASE_REG_ID, USER_DATA_KEY, SERVER_URL } from '../../constants';
+import { DEVICE_ID_KEY, FIREBASE_REG_ID, USER_DATA_KEY, SERVER_URL, SCREEN_NAME } from '../../constants';
 import './Popup.css';
 import logoIcon from '../../assets/img/icon-34.png';
 
 import Onboarding from '../Onboarding/Onboarding';
 import Home from '../Home/Home';
+import Account from '../Account/Account';
 import Transfer from '../Transfer/Transfer';
 
 const Popup = () => {
-  const [deviceID, setDeviceID] = useState('');
+  const [deviceId, setDeviceID] = useState('');
   const [userData, setUserData] = useState(null);
   const [qr, setQR] = useState(null);
   const [firebaseRegId, setFirebaseRegID] = useState('');
   const [notificationMsg, setNotificationMsg] = useState(null);
-  const [screenState, setScreenState] = useState('Onboarding');
+  const [screenState, setScreenState] = useState(SCREEN_NAME.ONBOARDING);
   const [wallets, setWallets] = useState([]);
 
   useEffect(() => {
     chrome.storage.sync.get([DEVICE_ID_KEY, FIREBASE_REG_ID, USER_DATA_KEY], function (items) {
       if (items[DEVICE_ID_KEY]) {
         setDeviceID(items[DEVICE_ID_KEY]);
+        console.log(items[DEVICE_ID_KEY]);
       } else {
         const token = cryptoRandomString({ length: 30, type: 'base64' });
         console.log(`Generate deviceID: ${token}`)
@@ -32,8 +35,10 @@ const Popup = () => {
       }
       if (items[USER_DATA_KEY]) {
         setUserData(JSON.parse(items[USER_DATA_KEY]));
+        setScreenState(SCREEN_NAME.HOME);
       }
       setFirebaseRegID(items[FIREBASE_REG_ID]);
+      console.log(items[FIREBASE_REG_ID]);
     });
 
     function tokenRegistered(registration_id) {
@@ -55,18 +60,20 @@ const Popup = () => {
         chrome.storage.sync.set({ [USER_DATA_KEY]: JSON.stringify(userObj) }, function () {
           console.log('Store user data.');
         });
+        setScreenState(SCREEN_NAME.HOME);
       }
       setNotificationMsg(message);
     })
   }, []);
 
   useEffect(() => {
-    if (userData && deviceID && wallets.length === 0) {
+    console.log(userData, deviceId);
+    if (userData && deviceId && wallets.length === 0) {
       console.log('Wallets Fetching');
       console.log(userData);
       axios.get(`${SERVER_URL}/wallet`, {
         params: {
-          extensionDeviceID: deviceID,
+          extensionDeviceID: deviceId,
           nodeId: userData.nodeId,
         }
       }).then((resp) => {
@@ -80,13 +87,22 @@ const Popup = () => {
         console.error(err);
       })
     }
-  }, [userData, deviceID, wallets])
+  }, [userData, deviceId, wallets])
+
+  const onLogout = () => {
+    chrome.storage.sync.remove(USER_DATA_KEY, () => {
+      setScreenState(SCREEN_NAME.ONBOARDING);
+      setUserData(null);
+    })
+  }
 
   return (
     <div className="App">
-      {!userData && <Onboarding firebaseRegId={firebaseRegId} deviceID={deviceID} />}
-      {screenState === 'Home' && <Home userData={userData} setScreenState={(action) => setScreenState(action)} />}
-      {['Send', 'Receive'].includes(screenState) && <Transfer userData={userData} action={screenState} setScreenState={setScreenState} wallets={wallets} deviceID={deviceID} />}
+      {!userData && <Onboarding firebaseRegId={firebaseRegId} deviceId={deviceId} />}
+      {screenState === SCREEN_NAME.HOME && <Home userData={userData} setScreenState={(action) => setScreenState(action)} />}
+      {screenState === SCREEN_NAME.ACCOUNT && <Account userData={userData} setScreenState={(action) => setScreenState(action)} onLogout={onLogout} />}
+      {[SCREEN_NAME.SEND, SCREEN_NAME.RECEIVE].includes(screenState) && <Transfer userData={userData} action={screenState} setScreenState={setScreenState} wallets={wallets} deviceId={deviceId} />}
+
     </div>
   );
 };
